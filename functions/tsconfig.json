@@ -1,0 +1,20 @@
+// functions/tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",              // 최신 JS 기능 허용
+    "module": "commonjs",            // Node용 모듈 시스템
+    "lib": ["es2020"],               // DOM 제외, ES2020 기능만
+    "moduleResolution": "node",      // Node 방식 해석
+    "esModuleInterop": true,         
+    "strict": true,                  // 엄격 모드
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,            // 외부 라이브러리 타입 충돌 무시
+    "outDir": "lib",                 
+    "rootDir": "src",                
+    "sourceMap": true,
+    "types": ["node"]                // Node 타입만 불러오기
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ✅ 사용자 정보: 본인만 읽고 쓸 수 있음
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ✅ 학과 정보: 누구나 읽을 수 있고, 쓰기는 금지
+    match /department/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ✅ 공지 정보 (notice): 누구나 읽을 수 있음
+    match /notice/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ✅ 학과별 공지 (Functions가 생성)
+    match /notices/{deptId}/deptNotices/{docId} {
+      allow read: if true;       // 앱에서 읽기 가능
+      allow write: if false;     // Functions만 Admin SDK로 작성
+    }
+
+    // ✅ 글로벌 공지 (Functions가 생성)
+    match /notices_hbLive/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /notices_scholarship/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /notices_school/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ❌ Functions에서 내부적으로만 쓰는 lastFetched 정보 (앱은 접근 불가)
+    match /lastFetched/{docId} {
+      allow read, write: if false;
+    }
+    match /lastFetchedGlobal/{docId} {
+      allow read, write: if false;
+    }
+
+    // ❌ 그 외 모든 문서 접근 금지
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
